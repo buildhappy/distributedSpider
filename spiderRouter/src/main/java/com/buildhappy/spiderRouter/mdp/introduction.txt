@@ -1,0 +1,50 @@
+问题一：Work和Broker的通信
+worker发送的消息类型：
+[000] 
+[006] MDPW01
+[001] 01
+[004] echo
+
+broker接受的消息类型：
+[005] 006B8B4567
+[000] 
+[006] MDPW01
+[001] 01
+[004] echo
+
+当worker向broker发送一个ready消息后：
+	1)、broker将msg拆包，提取worker的id和最后两帧的消息部分01(ready)和echo(服务类型)
+	2)、从workers(Map容器)中查找该worker(根据id)，如果该worker已经存在就直接返回，否则创建worker并存入Map容器中
+	3)、设置该worker的service信息(worker.service = requireService(serviceFrame))，
+		如果该service已经存在直接返回，否则创建一个并存入services中(一个Map容器)
+	4)、将该worker添加到idleWorkers中(Dequeue队列)，并将该work添加到service的waiting容器中。
+		通过workerWaiting(worker)实现
+
+问题二：Client和Broker的通信
+Client发送的消息：
+[000] 				空帧
+[006] MDPC01  	 	身份标识
+[004] echo	   		服务种类
+[011] Hello world	消息体
+
+Router接受到Client的消息：
+[005] 006B8B4567	Router自动添加身份标识
+[000] 
+[006] MDPC01
+[004] echo
+[011] Hello world
+当client向broker发送一个服务请求后：
+	1)、broker将msg拆包，提取serviceFrame(服务类型)和剩余的消息帧echo(服务类型)和Hello world(消息体)
+	2)、调用requireService(serviceFrame)获取相应的服务
+	3)、调用dispatch(Service service , ZMsg msg),从msg中获取消息类型，并将该消息添加到service的requests队列中
+	4)、在dispatch会一直轮寻requests中的任务，如果有可用的worker则将任务进行分发
+	
+问题三：什么时候会对client的任务进行分发：
+	前提条件是，有任务存在+有对因的worker存在。
+	任务的分发是在dispatch(Service service , ZMsg msg)函数中进行的，并且在workerWaiting(Worker worker)函数中被调用。
+	在以下场合被调用：
+		client发送请求后，直接调用dispatch函数；
+		当worker发送ready和reply消息后，调用workerWaiting函数
+	
+
+	

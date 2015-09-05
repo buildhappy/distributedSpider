@@ -1,0 +1,20 @@
+2015-07-30 13:34:26 INFO  MdDownloaderApi:43 - MdDownloaderApi constructor
+2015-07-30 13:34:26 INFO  MdDownloaderApi:53 - MdDownloaderApi sendToBroker()
+2015-07-30 13:34:26 INFO  MdDownloaderApi:62 - I:sending %s to broker
+
+2015-07-30 13:34:26 INFO  MdDownloaderApi:63 - --------------------------------------
+[000] 
+[006] MDPW01
+[001] 01
+[010] downloader
+
+2015-07-30 13:34:35 INFO  MdDownloaderApi:43 - MdDownloaderApi constructor
+2015-07-30 13:34:35 INFO  MdDownloaderApi:53 - MdDownloaderApi sendToBroker()
+2015-07-30 13:34:35 INFO  MdDownloaderApi:62 - I:sending %s to broker
+
+2015-07-30 13:34:35 INFO  MdDownloaderApi:63 - --------------------------------------
+[000] 
+[006] MDPW01
+[001] 01
+[010] downloader
+
