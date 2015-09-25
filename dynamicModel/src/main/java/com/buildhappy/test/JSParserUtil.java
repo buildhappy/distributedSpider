@@ -5,7 +5,6 @@ package com.buildhappy.test;
  * 然后从获取response的url，
  * 该url一般是ajax的url(即通过该url可以获取该apk的json数据，这些数据里面会有该apk的下载链接信息)
  */
-import java.awt.Event;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -88,7 +87,7 @@ public class JSParserUtil {
 		url = "http://pan.baidu.com/s/1ntmPo73";
 
 		url = "http://dl.pconline.com.cn/download/61068.html";
-		List alertHandler = new LinkedList();;
+		List alertHandler = new LinkedList();
 		WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);//CHROME);
 		webClient.setAjaxController(new MyNicelyResynchronizingAjaxController());
 		webClient.getOptions().setJavaScriptEnabled(true);
