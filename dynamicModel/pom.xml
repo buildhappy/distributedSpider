@@ -210,7 +210,13 @@
 			<artifactId>js</artifactId>
 			<version>1.7R2</version>
 		</dependency>
-<!-- start for zeromq -->
+      <dependency>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+          <version>16.0.1</version>
+      </dependency>
+
+      <!-- start for zeromq -->
   		<dependency>
     		<groupId>org.zeromq</groupId>
         	<artifactId>jzmq</artifactId>

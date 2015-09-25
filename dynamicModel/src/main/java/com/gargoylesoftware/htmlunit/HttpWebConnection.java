@@ -152,6 +152,7 @@ public class HttpWebConnection implements WebConnection {
      * {@inheritDoc}
      */
     public WebResponse getResponse(final WebRequest request) throws IOException {
+        final long startTime = System.currentTimeMillis();
         final URL url = request.getUrl();
         final HttpClientBuilder builder = reconfigureHttpClientIfNeeded(getHttpClientBuilder());
 
@@ -171,7 +172,6 @@ public class HttpWebConnection implements WebConnection {
             }
             final HttpHost hostConfiguration = getHostConfiguration(request);
 //            setProxy(httpMethod, request);
-            final long startTime = System.currentTimeMillis();
 
             HttpResponse httpResponse = null;
             try {
@@ -200,6 +200,8 @@ public class HttpWebConnection implements WebConnection {
 
             final DownloadedContent downloadedBody = downloadResponseBody(httpResponse);
             final long endTime = System.currentTimeMillis();
+            long time = endTime - startTime;
+            LOG.info("GetResponse consume time:" + time);
             return makeWebResponse(httpResponse, request, downloadedBody, endTime - startTime);
         }
         finally {
@@ -757,6 +759,7 @@ public class HttpWebConnection implements WebConnection {
      * <code>socketFactory</code>.
      */
     private PoolingHttpClientConnectionManager createConnectionManager(final HttpClientBuilder builder) {
+        long start = System.currentTimeMillis();
         final ConnectionSocketFactory socketFactory = new SocksConnectionSocketFactory();
 
         LayeredConnectionSocketFactory sslSocketFactory;
@@ -826,6 +829,9 @@ public class HttpWebConnection implements WebConnection {
             if (maxConnPerRoute > 0) {
                 connectionManager.setDefaultMaxPerRoute(maxConnPerRoute);
             }
+            long end = System.currentTimeMillis();
+            long time = end - start;
+            LOG.info("Construct HttpBuilder consume:" + time);
             return connectionManager;
         }
         catch (final IllegalAccessException e) {

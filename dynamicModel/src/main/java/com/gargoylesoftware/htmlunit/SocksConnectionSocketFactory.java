@@ -31,7 +31,7 @@ import org.apache.http.protocol.HttpContext;
  * @author Ronald Brill
  * @author Marc Guillemot
  */
-class SocksConnectionSocketFactory extends PlainConnectionSocketFactory {
+public class SocksConnectionSocketFactory extends PlainConnectionSocketFactory {
     private static final String SOCKS_PROXY = "htmlunit.socksproxy";
 
     static void setSocksProxy(final HttpContext context, final HttpHost socksProxy) {

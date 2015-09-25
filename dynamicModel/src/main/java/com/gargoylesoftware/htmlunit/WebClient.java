@@ -456,6 +456,7 @@ public class WebClient implements Serializable {
     public Page loadWebResponseInto(final WebResponse webResponse, final WebWindow webWindow)
         throws IOException, FailingHttpStatusCodeException {
     	LOG.info("WebClient:loadWebResponseInto(final WebResponse webResponse, final WebWindow webWindow)");
+        long start = System.currentTimeMillis();
         WebAssert.notNull("webResponse", webResponse);
         WebAssert.notNull("webWindow", webWindow);
 
@@ -501,6 +502,9 @@ public class WebClient implements Serializable {
                 }
             }
         }
+        long end = System.currentTimeMillis();
+        long time = end - start;
+        LOG.info("loadWebResponseInto consume time:" + time);
         return newPage;
     }
 
@@ -1256,6 +1260,7 @@ public class WebClient implements Serializable {
      */
     private WebResponse loadWebResponseFromWebConnection(final WebRequest webRequest,
         final int allowedRedirects) throws IOException {
+        long start = System.currentTimeMillis();
     	LOG.info("WebClient: WebResponse loadWebResponseFromWebConnection(final WebRequest webRequest,final int allowedRedirects)");
         URL url = webRequest.getUrl();
         final HttpMethod method = webRequest.getHttpMethod();
@@ -1321,7 +1326,7 @@ public class WebClient implements Serializable {
         final WebResponse fromCache = getCache().getCachedResponse(webRequest);//从本地缓存中获取数据
         final WebResponse webResponse;
         if (fromCache != null) {
-        	System.out.println("fromCache:" + fromCache.getWebRequest().getUrl().toString());
+        	LOG.info("fromCache:" + fromCache.getWebRequest().getUrl().toString());
             webResponse = new WebResponseFromCache(fromCache, webRequest);
         }
         else {
@@ -1387,7 +1392,9 @@ public class WebClient implements Serializable {
                 return loadWebResponseFromWebConnection(wrs, allowedRedirects - 1);
             }
         }
-
+        long end = System.currentTimeMillis();
+        long time = end - start;
+        LOG.info("loadWebResponseFromWebConnection consume time(include getResponse consuming):" + time);
         return webResponse;
     }
 
