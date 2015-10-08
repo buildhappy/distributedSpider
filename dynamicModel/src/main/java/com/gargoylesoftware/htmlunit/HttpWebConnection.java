@@ -170,6 +170,8 @@ public class HttpWebConnection implements WebConnection {
                 throw new IOException("Unable to create URI from URL: " + url.toExternalForm()
                         + " (reason: " + e.getMessage() + ")", e);
             }
+            //HttpHost:Holds all of the variables needed to describe an HTTP connection to a host.
+            //This includes remote host name, port and scheme.
             final HttpHost hostConfiguration = getHostConfiguration(request);
 //            setProxy(httpMethod, request);
 
@@ -759,7 +761,7 @@ public class HttpWebConnection implements WebConnection {
      * <code>socketFactory</code>.
      */
     private PoolingHttpClientConnectionManager createConnectionManager(final HttpClientBuilder builder) {
-        long start = System.currentTimeMillis();
+        //long start = System.currentTimeMillis();
         final ConnectionSocketFactory socketFactory = new SocksConnectionSocketFactory();
 
         LayeredConnectionSocketFactory sslSocketFactory;
@@ -829,9 +831,9 @@ public class HttpWebConnection implements WebConnection {
             if (maxConnPerRoute > 0) {
                 connectionManager.setDefaultMaxPerRoute(maxConnPerRoute);
             }
-            long end = System.currentTimeMillis();
-            long time = end - start;
-            LOG.info("Construct HttpBuilder consume:" + time);
+            //long end = System.currentTimeMillis();
+            //long time = end - start;
+            //LOG.info("Construct HttpBuilder consume:" + time);
             return connectionManager;
         }
         catch (final IllegalAccessException e) {

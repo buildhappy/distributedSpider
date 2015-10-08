@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class TestHtmlUnit {
     private static final Log LOG = LogFactory.getLog(TestHtmlUnit.class);
-    private static String  url = "http://www.bupt.edu.cn/inc/jquery-1.9.1.min.js";
+    private static String  url = "http://www.baidu.com";
 
     public static void main(String[] args){
         long start , end , time , globalStart = System.currentTimeMillis();

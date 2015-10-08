@@ -10,13 +10,17 @@ import org.apache.http.conn.ConnectionPoolTimeoutException;
 import org.apache.http.conn.ConnectionRequest;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.routing.HttpRoute;
+import org.apache.http.conn.routing.HttpRoutePlanner;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
@@ -25,10 +29,9 @@ import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.ProxySelector;
 import java.net.Socket;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -299,6 +302,37 @@ public class HttpClientManagerTest {
         SSLContext sslContext = SSLContexts.custom().useTLS()
                 .loadTrustMaterial(myTrustStore).build();
         SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext);
+    }
+
+    /**
+     * Case 8: 对代理的设置
+     * 尽管，HttpClient支持复杂的路由方案和代理链，它同样也支持直接连接或者只通过一跳的连接。
+     */
+    public static void setProxy(){
+        //方法一：使用代理服务器最简单的方式就是，指定一个默认的proxy参数。
+        HttpHost proxy = new HttpHost("someproxy", 8080);
+        DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
+        CloseableHttpClient httpclient = HttpClients.custom()
+                .setRoutePlanner(routePlanner)
+                .build();
+        //方法二：我们也可以让HttpClient去使用jre的代理服务器。
+        SystemDefaultRoutePlanner routePlanner2 = new SystemDefaultRoutePlanner(
+                ProxySelector.getDefault());
+        CloseableHttpClient httpclient2 = HttpClients.custom()
+                .setRoutePlanner(routePlanner)
+                .build();
+        //方法三：可以手动配置RoutePlanner，这样就可以完全控制Http路由的过程
+        HttpRoutePlanner routePlanner3 = new HttpRoutePlanner() {
+
+            public HttpRoute determineRoute(
+                    HttpHost target,
+                    HttpRequest request,
+                    HttpContext context) throws HttpException {
+                return new HttpRoute(target, null,  new HttpHost("someproxy", 8080),
+                        "https".equalsIgnoreCase(target.getSchemeName()));
+            }
+
+        };
     }
 }
 

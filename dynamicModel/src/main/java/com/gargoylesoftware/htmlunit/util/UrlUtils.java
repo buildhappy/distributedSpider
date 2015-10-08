@@ -47,7 +47,7 @@ public final class UrlUtils {
      */
     static {
         final BitSet reserved = new BitSet(256);
-        reserved.set(';');
+        reserved.set(';');//Sets the bit at the specified index to true
         reserved.set('/');
         reserved.set('?');
         reserved.set(':');
@@ -83,7 +83,7 @@ public final class UrlUtils {
         }
 
         final BitSet alphanumeric = new BitSet(256);
-        alphanumeric.or(alpha);
+        alphanumeric.or(alpha);//两个集合做按位或
         alphanumeric.or(digit);
 
         final BitSet unreserved = new BitSet(256);
